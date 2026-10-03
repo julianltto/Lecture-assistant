@@ -1,0 +1,9 @@
+[project]
+name = "lecture-assistant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=1.11.0",
+]

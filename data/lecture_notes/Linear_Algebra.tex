@@ -1,0 +1,1138 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LaTeX book template                           %%
+%% Author:  Amber Jain (http://amberj.devio.us/) %%
+%% License: ISC license                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper,11pt]{book}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Source: http://en.wikibooks.org/wiki/LaTeX/Hyperlinks %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{/Users/HechenHu/Development/NoteTaking/Mathematics-Notes/Customized}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter quote at the start of chapter        %
+% Source: http://tex.stackexchange.com/a/53380 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+
+\renewcommand{\@chapapp}{}% Not necessary...
+
+\newenvironment{chapquote}[2][2em]
+{\setlength{\@tempdima}{#1}%
+	\def\chapquote@author{#2}%
+	\parshape 1 \@tempdima \dimexpr\textwidth-2\@tempdima\relax%
+	\itshape}
+{\par\normalfont\hfill--\ \chapquote@author\hspace*{\@tempdima}\par\bigskip}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% First page of book which contains 'stuff' like: %
+%  - Book title, subtitle                         %
+%  - Book author name                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Book's title and subtitle
+\title{\Huge \textbf{Linear Algebra}}
+% Author
+\author{\textsc{Hechen Hu}}
+
+\begin{document}
+	\frontmatter
+	\maketitle
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Auto-generated table of contents, list of figures and list of tables %
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\tableofcontents
+	
+	\mainmatter
+\chapter{Vector Spaces}
+\section{Definitions}
+\begin{Definition}
+		A \textit{vector space} over a field $ F $ is a set $ V $ with two closed operations, \textit{vector addition} or simply \textit{addition} and \textit{scalar multiplication}, that satisfy the following axioms:
+		\begin{enumerate}
+			\item Associativity of addition;
+			\item Commutativity of addition;
+			\item Identity element of addition;
+			\item Inverse elements of addition;
+			\item Compatibility of scalar multiplication with field multiplication;
+			\begin{equation}
+			a(b \vec{v})=(ab)\vec{v} \nonumber
+			\end{equation}
+			\item Identity element of scalar multiplication;
+			\item Distributivity of scalar multiplication with respect to vector addition;
+			\item Distributivity of scalar multiplication with respect to field addition.
+		\end{enumerate}
+\end{Definition}
+\begin{Definition}
+	A \textit{subspace} of a vector space $ V $ is a subset $ H $ of $ V $ that has three properties:
+	\begin{itemize}
+		\item The zero vector of $ V $ is in $ H $.
+		\item $ H $ is closed under vector addition.
+		\item $ H $ is closed under multiplication by scalars.
+	\end{itemize}
+	If a subspace only contains the zero vector $ \vec{0} $, it is called a \textit{zero subspace} and written as $ \{\vec{0} \} $.
+\end{Definition}	
+\begin{Definition}
+	Given vectors $ \vec{v}_1,\vec{v}_2,\cdots,\vec{v}_n $ in an arbitrary vector space $ V $ and given scalars $ c_1,c_2,\cdots,c_n $, the vector $ \vec{y} $ defined by
+	\begin{equation}
+	\vec{y}=c_1 \vec{v}_1+ \cdots + c_n \vec{v}_n \nonumber
+	\end{equation}
+	is called a \textit{linear combination of $ \vec{v}_1,\vec{v}_2,\cdots,\vec{v}_n  $ using weights $ c_1,c_2,\cdots,c_n $}.
+\end{Definition}	
+It is easy to verify that the set $ W $ of all linear combinations of $ \vec{v}_1,\vec{v}_2,\cdots,\vec{v}_n  $ is a subspace of $ V $.\newpara
+The subspace $ W $ as above is called the subspace \textit{generated} by $ \vec{v}_1,\vec{v}_2,\cdots,\vec{v}_n $. If $ W=V $, then we say that $ \vec{v}_1,\vec{v}_2,\cdots,\vec{v}_n $ \textit{generate} $ V $.
+\begin{Definition}
+	The \textit{dot product} or \textit{scalar product} of two vectors is defined as the sum of the product of their corresponding components. It has the following properties:
+	\begin{enumerate}
+		\item The commutativity of dot product.
+		\item The distributivity of dot product over vector addition and vice versa.
+		\item The associativity of scalar multiplication and dot product.
+	\end{enumerate}
+Two vectors are \textit{perpendicular} or \textit{orthogonal} if their dot product is zero.
+\end{Definition}
+
+\section{Bases}
+	\begin{Definition}
+	An indexed set of vectors $ \{\vec{v}_1,\cdots,\vec{v}_p \} \in V$ is said to be \textit{linearly independent} if the vector equation
+	\begin{equation}
+	c_1 \vec{v}_1 + c_2 \vec{v}_2 + \cdots +c_p \vec{v}_p = \vec{0} \nonumber
+	\end{equation}
+	has only the trivial solution. Otherwise it's said to be \textit{linearly dependent}.
+\end{Definition}
+\begin{Definition}
+	A collection of linearly independent vectors that generated the vector space $ V $ is called a \textit{basis} of $ V $.
+\end{Definition}
+\begin{Definition}
+	Let $ V $ be a vector space and $ \mathscr{B} $ be a basis for it. The \textit{coordinate with respect to basis $ \mathscr{B} $} of an element is a n-tuple of numbers such that the desired element can be expressed with the linear combination of the n-tuple and basis elements. By the definition of basis, the coordinate of any element is unique.
+\end{Definition}	
+\begin{Definition}
+	The \textit{maximal subset of linearly independent elements} is a subset of any collection of vectors of a vector space that adding another element from the original collection that is not in this maximal subset will result in the loss of linearly independence.
+\end{Definition}
+\begin{Theorem}
+	The maximal subset of linearly independent elements of any collection of vectors that generate the vector space is a basis for it.
+\end{Theorem}
+\section{Dimension of a Vector Space}	
+\begin{Theorem}
+	Let $ V $ be a vector space over the field $ K $. Let $ \mathscr{B} $ be a basis that has $ m $ elements. Then any collection of more than $ m $ vectors in $ V $ are linearly dependent.
+\end{Theorem}	
+\begin{proof}
+	Let the basis $ \mathscr{B} $ be $ \{\vec{v}_1,\cdots,\vec{v}_m\} $ and the collection of $ n $ vectors($ n>m $) in $ V $ be $ \vec{w}_1,\cdots,\vec{w}_n $. Assume this collection of vectors are linearly independent. Since $ \mathscr{B} $ is a basis, the equation
+	\begin{equation}
+		\vec{w}_1 = a_1 \vec{v}_1 + \cdots + a_m\vec{v_m} \nonumber
+	\end{equation}
+	holds for some elements in the field $ K $ that are not all zero. Without loss of generality, we can assume that $ a_1\neq 0 $(otherwise we could just rearrange the equation to make it so). Solve for $ \vec{v}_1 $
+	\begin{equation}
+		\vec{v}_1 = a_1^{-1}\vec{w}_1 -a_1^{-1}a_2 \vec{v}_2 -\cdots a_1^{-1}a_m \vec{v}_m \nonumber
+	\end{equation}
+	Then the subspace generated by $ \vec{w}_1,\vec{v}_2,\cdots,\vec{v}_m $ is all of $ V $ since it contains $ \vec{v}_1 $. Now assume by induction that there is an integer $ r $, $ 1 \leqslant r < m $, such that after a suitable renumbering of $ \vec{v}_1,\cdots,\vec{v}_m $, the elements $ \vec{w}_1,\cdots,\vec{w}_r,\vec{v}_{r+1},\cdots,\vec{v}_m $ generate $ V $. Then the equation
+	\begin{equation}
+		\vec{w}_{r+1}=b_1 \vec{w}_1 + \cdots + b_r \vec{w}_r + c_{r+1}\vec{v}_{r+1}+\cdots + c_m \vec{v}_m \nonumber
+	\end{equation}
+	holds for some element in $ K $. $ c_{r+1},\cdots, c_m$ can't be all zero, since then we have expressed $ \vec{w}_{r+1} $ as a linear combination of $ \vec{w}_1,\cdots,\vec{w}_r $, contradict out assumption. Without loss of generality, assume that $ c_{r+1} $ is not zero. Repeat the same process when we solve for $ \vec{v}_1 $ to solve for $ \vec{v}_{r+1} $, we then find that $ \vec{v}_{r+1} $ is in the subspace generated by $ \vec{w}_1,\cdots,\vec{w}_{r+1},\vec{v}_{r+2},\cdots,\vec{v}_{m} $. By the induction assumption, these vectors also generate $ V $. Therefore vectors $ \vec{w}_1,\cdots,\vec{w}_m $ generate $ V $, and for $ n>m $ we can expressed $ \vec{w}_n $ as a linear combination of $ \vec{w}_1,\cdots,\vec{w}_m $. The theorem is then proved.
+\end{proof}	
+\begin{Corollary}
+	Any two basis of the same vector space have the same number of elements.
+\end{Corollary}
+\begin{Definition}
+	The number of vectors in a basis is called the \textit{dimension} of this vector space.
+\end{Definition}
+\begin{Definition}
+	The \textit{maximal set of linearly independent elements} of a vector space $ V $ is a collection of linearly independent vectors such that adding extra "outside" vectors would result in the loss of its linearly independence.
+\end{Definition}
+\begin{Theorem}
+	The maximal set of linearly independent elements of a vector space $ V $ is a basis for it.
+\end{Theorem}
+\begin{proof}
+	Let this maximal set be $ \{\vec{v}_1,\cdots,\vec{v}_n \} $ and $ \vec{w} $ be a element of the vector space $ V $. By hypotheses the union of the maximal set and $ \vec{w} $ is linearly dependent, then
+	\begin{equation}
+		x_0 \vec{w} + x_1 \vec{v}_1 + \cdots + x_n \vec{v}_n = 0 \nonumber
+	\end{equation}
+	has a nontrivial solution. By the linearly independence of $ \{\vec{v}_1,\cdots,\vec{v}_n \} $, $ x_0 $ is not zero. Then we can solve for $ \vec{w} $
+	\begin{equation}
+		\vec{w}=- \frac{x_1}{x_0}\vec{v}_1 - \cdots -\frac{x_n}{x_0}\vec{v}_n \nonumber
+	\end{equation}
+\end{proof}
+\begin{Corollary}
+	For a vector space of dimension $ n $, any collection of $ n $ linearly independent vectors is a basis for it.
+\end{Corollary}
+\begin{Corollary}
+	Let $ V $ be a vector space and let $ W $ be a subspace for it. If $ \dim W = \dim V $, then $ V=W $.
+\end{Corollary}
+\begin{Corollary}
+	Any linearly independent collections of a vector space can be made to a basis for it by adding some (or $ 0 $) vectors that are/is linearly independent to its elements.
+\end{Corollary}
+\begin{Theorem}
+	The dimension of the subspace $ W $ that does not consist of the zero vector alone of a vector space $ V $ is no greater than $ \dim V $.
+\end{Theorem}
+	
+\section{Sums and Direct Sums}
+\begin{Definition}
+	If $ U $ and $ W $ are subspaces of a vector space $ V $, then $ U+W $, the set of all elements $ \vec{u}+\vec{w} $ with $ \vec{u} \in U $ and $ \vec{w} \in W $, is a subspace of $ V $, said to be generated by $ U $ and $ W $, and called the \textit{sum} of $ U $ and $ W $. $ V $ is a \textit{direct sum} of $ U $ and $ W $ if for any $ \vec{v} \in V $ there exist \textbf{unique} elements $ \vec{u}\in U $ an $ \vec{w}\in W $ such that $ \vec{v}=\vec{u}+\vec{w} $. When $ V $ is the direct sum of subspaces $ U $, $ W $, we write 
+	\begin{equation}
+		V = U \oplus W \nonumber
+	\end{equation}
+\end{Definition}
+\begin{Theorem}
+	Let $ V $ be a vector space over the field $ K $, and let $ U $, $ W $ be subspaces. If $ U+W = V $ and $ U\cap W = \{\vec{0} \}$, then $ V = U \oplus W $.
+\end{Theorem}
+\begin{Theorem}
+	Let $ V $ be a finite dimensional vector space over the field $ K $. Let $ W $ be a subspace. Then there exists a subspace $ U $ such that $ V = W \oplus U $.
+\end{Theorem}
+\begin{Theorem}
+	If $ V $ is a finite dimensional vector space and is the direct sum of subspaces $ U $ and $ W $, then
+	\begin{equation}
+		\dim V = \dim W + \dim U \nonumber
+	\end{equation}
+\end{Theorem}
+\begin{Definition}
+	The \textit{direct product} of two vector spaces $ U $ and $ W $ over the field $ K $ is the cartesian product of elements in $ U $ and $ W $, i.e $ (u_1,w_1)\in U \times W $. The vector addition and scalar multiplication are defined to be componentwise.
+\end{Definition}
+Immediately, the direct product of two vector spaces over the same field is a vector space.
+\begin{Theorem}
+	\begin{equation}
+		\dim (U \times W)=\dim U + \dim W \nonumber
+	\end{equation}
+\end{Theorem}
+\begin{proof}
+	For two basis in each space $ \{\vec{u}_1,\cdots,\vec{u}_n \} $ and $ \{\vec{w}_1,\cdots,\vec{w}_m \} $, the collection of vectors in $ U \times W $ consists of $ \{(\vec{u}_1,\vec{0}),\cdots,(\vec{u}_n,\vec{0}),(\vec{0},\vec{w}_1),\cdots,(\vec{0},\vec{w}_m) \} $ is a basis for $ U \times W $ of $ n+m $ elements.
+\end{proof}
+The notion of direct sum and direct product can be extended to several factors with $ \sum $ and $ \prod $. In this circumstance vector addition and scalar multiplication are also defined to be componentwise.
+
+\chapter{Matrices}
+	\section{Matrices and Arithmetic Operations on Them}
+\begin{Definition}
+	A \textit{diagonal matrix} is a square matrix whose nondiagonal entries are zero.
+\end{Definition}
+\begin{Definition}
+	Two matrices are equal if they have the same size and each entries are equal.
+\end{Definition}
+\begin{Definition}
+	The \textit{sum} of two matrices is the sum of each corresponding entries in these two matrices. Thus the sum is defined only when they have the same size.
+\end{Definition}
+\begin{Definition}
+	The \textit{scalar multiple} of a matrix has entries of the product of the scalar and each corresponding original entries.
+\end{Definition}
+\begin{Theorem}
+	The set of matrices of the same size with respect to matrix addition and scalar multiplication over the field of real numbers is a vector space.
+\end{Theorem}
+\begin{Definition}
+	A square matrix is called \textit{lower triangular} if all the entries above the main diagonal are zero. Similarly, a square matrix is called \textit{upper triangular} if all the entries below the main diagonal are zero. A triangular matrix is one that is either lower triangular or upper triangular. A matrix that is both upper and lower triangular is called a \textit{diagonal matrix}.
+\end{Definition}
+\begin{Definition}
+	If $ \matr{A} $ is an $ m \times n $ matrix, and if $ \matr{B} $ is an $ n \times p $ matrix with columns $ \vec{b}_1,\cdots,\vec{b}_p $, then the \textit{product} $ \matr{AB} $ is the $ m \times p $ matrix whose columns are $ \matr{A} \vec{b}_1,\cdots,\matr{A}\vec{b}_p $. Multiplication of matrices corresponds to composition of linear transformations.
+\end{Definition}
+\begin{Theorem}
+	The multiplication has the following properties:
+	\begin{itemize}
+		\item Associativity of multiplication;
+		\item Left distribution;
+		\item Right distribution;
+		\item Associativity over scalar multiplication;
+		\item Identity for matrix multiplication; i.e. If $ \matr{A} $ is a matrix of size $ m \times n $, then
+		\begin{equation}
+		\matr{I}_m \matr{A} = \matr{A}=\matr{A}\matr{I}_n \nonumber
+		\end{equation}
+		where $ \matr{I}_n $ is the $ n \times n $  identity matrix.
+	\end{itemize}
+\end{Theorem}
+\begin{Definition}
+	In general, matrix multiplication is not commutative and the cancellation law do not hold. When two matrices' multiplication is commutative, they are said to be \textit{commute} with one another. Also, if a product $ \matr{A}\matr{B} $ is the zero matrix, in general it does not mean that either $ \matr{A}=\matr{0} $ or $ \matr{B}=\matr{0} $.
+\end{Definition}
+\begin{Definition}
+	If $ \matr{A} $ is an $ m \times n $ matrix and $ k $ is a positive integer, then $ \matr{A}^k $ denoted the product of $ k $ copies of $ \matr{A} $, i.e. the $ k $th power of $ \matr{A} $. The $ 0 $th power of a matrix is the identity matrix.
+\end{Definition}
+\begin{Definition}
+	If $ \matr{A} $ is an $ m \times n $ matrix, the \textit{transpose} of $ \matr{A} $ is the $ n \times m $ matrix, denoted $ \matr{A}^T $, whose columns are formed from the corresponding rows of $ \matr{A} $.
+\end{Definition}
+\begin{Definition}
+	If $ \matr{A} $ is an $ m \times n $ matrix, the \textit{transpose} of $ \matr{A} $ is the $ n \times m $ matrix, denoted $ \matr{A}^T $, whose columns are formed from the corresponding rows of $ \matr{A} $.
+\end{Definition}
+\begin{Definition}
+	A matrix is said to be \textit{symmetric} if it is equal to its transpose.
+\end{Definition}
+\begin{Definition}
+	The \textit{unit} $ n \times n $ matrix, denoted by $ \matr{I}_n $, is the square matrix having all its components equal to $ 0 $ except the diagonal components, equal to $ 1 $.
+\end{Definition}
+\begin{Theorem}
+	The transpose operation has the following properties:
+	\begin{itemize}
+		\item $ (\matr{A}^T)^T=\matr{A} $;
+		\item $ (\matr{A}+\matr{B})^T = \matr{A}^T+ \matr{B}^T $;
+		\item Associativity with scalar multiplication;
+		\item $ (\matr{AB})^T = \matr{B}^T \matr{A}^T $, that is, the transpose of a product of arbitrary number of matrices equals the product of their transpose in the reverse order.
+	\end{itemize}
+\end{Theorem}
+\section{The Inverse of a Matrix}
+\begin{Definition}
+	If $ \matr{A} $ is an $ n \times n $ matrix, then if
+	\begin{equation}
+	\matr{A}\matr{A}^{-1}=\matr{I}_n\nonumber
+	\end{equation}
+	we say that $ \matr{A} $ is \textit{invertible} and $ \matr{A}^{-1} $ an \textit{inverse} of $ \matr{A} $. The inverse of a matrix is unique. If a matrix is not invertible, it is called a \textit{singular matrix}.
+\end{Definition}
+
+\begin{Theorem}
+	A matrix $ \matr{A} $ is invertible only if $ \det(\matr{A}) \neq 0$, and in this case
+	\begin{equation}
+	\matr{A}^{-1}=\frac{1}{\det(\matr{A})} \adj(\matr{A}) \nonumber
+	\end{equation}
+\end{Theorem}
+
+\begin{Theorem}
+	If $ \matr{A} $ is an invertible $ n \times n $ matrix, then for each $ \vec{b} \in \Real^n $, the equation $ \matr{A}\vec{x}=\vec{b} $ has the unique solution $ \vec{x}=\matr{A}^{-1}\vec{b} $.
+\end{Theorem}
+\begin{Theorem}
+	\begin{itemize}
+		\item The inverse of the inverse of a invertible matrix is the matrix itself.
+		\item The inverse of the product of arbitrary number of invertible square matrices is the product of the inverse of themselves multiplied in the reverse order.
+		\item The transpose of a invertible matrix is also invertible. Moreover, the inverse of a matrix's transpose is the transpose of the matrix's inverse.
+	\end{itemize}
+\end{Theorem}
+\begin{Definition}
+	An \textit{elementary matrix} is a matrix obtained by performing a single elementary row operation on a identity matrix.
+\end{Definition}
+\begin{Theorem}
+	If an elementary row operations is performed on an $ m \times n $ matrix $ \matr{A} $, the resulting matrix can be written as $ \matr{EA} $, where the $ m \times m $ matrix $ \matr{E} $ is created by performing the same row operation on $ \matr{I}_m $.
+\end{Theorem}
+\begin{Theorem}
+	Each elementary matrix $ \matr{E} $ is invertible. The inverse of $ \matr{E} $ is the elementary matrix of the same type that transforms $ \matr{E} $ back into $ \matr{I} $.
+\end{Theorem}
+\begin{Theorem}
+	An $ n \times n $ matrix $ \matr{A} $ is invertible iff $ \matr{A} $ is a row equivalent to $ \matr{I}_n $, and in this case, any sequence of elementary row operations that reduces $ \matr{A} $ to $ \matr{I}_n $ also transforms $ \matr{I}_n $ into $ \matr{A}^{-1} $.
+\end{Theorem}
+\begin{Theorem}[The Invertible Matrix Theorem]
+	Let $ \matr{A} $ be a square $ n \times n $ matrix. Then the following statements are equivalent.
+	\begin{itemize}
+		\item $ \matr{A} $ is an invertible matrix.
+		\item $ \matr{A} $ is row equivalent to the $ n \times n $ identity matrix.
+		\item $ \matr{A} $ has $ n $ pivot positions. \newpara
+		
+		\item The equation $ \matr{A}\vec{x}=\vec{0} $ has only the trivial solution.
+		\item The columns of $ \matr{A} $ form a linearly independent set.
+		\item The linear transformation $ \vec{x} \mapsto \matr{A}\vec{x} $ is injective.\newpara
+		
+		\item The equation $ \matr{A}\vec{x}=\vec{b} $ has at least one solution for each $ \vec{b} $ in $ \Real^n $.
+		\item The columns of $ \matr{A} $ span $ \Real^n $.
+		\item The linear transformation $ \vec{x} \mapsto \matr{A}\vec{x} $ maps $ \Real^n $ onto $ \Real^n $. \newpara
+		
+		\item There is an $ n \times n $ matrix $ \matr{C} $ such that $ \matr{CA}=\matr{I} $.
+		\item There is an $ n \times n $ matrix $ \matr{D} $ such that $ \matr{AD}=\matr{I} $.
+		\item $ \matr{A}^T $ is an invertible matrix.
+		\newpara
+		
+		\item The columns of $ \matr{A} $ form a basis of $ \Real^n $.
+		\item $ \col \matr{A}=\Real^n $
+		\item $ \dim \col \matr{A}=n $
+		\item $ \rank \matr{A}=n $
+		\item $ \nul \matr{A}=\{\vec{0} \} $
+		\item $ \dim \nul \matr{A}=0 $
+	\end{itemize}
+\end{Theorem}
+\begin{Proposition}
+	Let $ \matr{A} $ and $ \matr{B} $ be square matrices. If $ \matr{AB}=\matr{I} $, then $ \matr{A} $ and $ \matr{B} $ are both invertible, with $ \matr{B}=\matr{A}^{-1} $ and $ \matr{A}=\matr{B}^{-1}  $
+\end{Proposition}
+\begin{Definition}
+	A linear transformation $ T: \Real^n \to \Real^n $ is \textit{invertible} if there exists a function $ S: \Real^n \to \Real^n $ such that
+	\begin{align}
+	&(\forall \vec{x}\in \Real^n)\quad S(T(\vec{x}))=\vec{x}\nonumber\\
+	&(\forall \vec{x}\in \Real^n)\quad T(S(\vec{x}))=\vec{x}\nonumber
+	\end{align}
+	and $ S $ is called the \textit{inverse} of $ T $ and denoted $ T^{-1} $.
+\end{Definition}
+\begin{Theorem}
+	A linear transformation is invertible iff its standard matrix is invertible. In this case its inverse is unique.
+\end{Theorem}
+\begin{Theorem}
+	If $ \matr{A} $ is $ m \times n $ and $ \matr{B} $ is $ n \times p $, then
+	\begin{align}
+	\matr{AB}&=\begin{bmatrix}
+	\col_1(\matr{A}) &\col_2(\matr{A}) &\cdots &\col_n(\matr{A}) 
+	\end{bmatrix}
+	\begin{bmatrix}
+	\row_1(\matr{B}) \\
+	\row_2(\matr{B}) \\
+	\vdots \\
+	\row_n(\matr{B}) \\
+	\end{bmatrix} \nonumber\\
+	&=\col_1(\matr{A})\row_1(\matr{B})+\cdots \col_n(\matr{A})\row_n(\matr{B}) \nonumber
+	\end{align}
+\end{Theorem}
+\begin{Definition}
+	A \textit{block matrix} is a partitioned matrix with zero blocks off the main diagonal. Such matrix is invertible iff each block on the diagonal is invertible.
+\end{Definition}
+\begin{Definition}
+	A \textit{factorization} of a matrix is an equation that expresses it as a product of two or more matrices.
+\end{Definition}
+\begin{Definition}
+	An square matrix is said to be \textit{strictly diagonally dominant} if the absolute of each diagonal entry exceeds the sum of the absolute values of the other entries in the same row.
+\end{Definition}
+\chapter{Linear Mappings}
+\begin{Definition}
+	Let $ V,W $ be vector spaces over $ K $, and let $ F:V \to W $ be a linear map. The \textit{kennel} of $ F $, denoted $ \Ker F $, is the set of elements $ \vec{v} \in V $ such that $ F(\vec{v}=\vec{0}) $.
+\end{Definition}	
+The kernel of a linear map on vector space is a subspace of the vector space.
+\begin{Proposition}
+	The following two conditions are equivalent
+	\begin{enumerate}
+		\item The kernel of $ F $ is $ \{\vec{0} \} $.
+		\item $ F $ is injective.
+	\end{enumerate}
+\end{Proposition}
+\begin{proof}
+	
+\end{proof}
+\begin{Theorem}
+	Let $ F:V \to W $ be a linear map whose kernel is $ \{\vec{0} \} $. If $ \vec{v}_1,\cdots,\vec{v}_n $ are linearly independent elements of $ V $, then $ F(\vec{v}_1),\cdots,F(\vec{v}_n) $ are linearly independent elements of $ W $.
+\end{Theorem}
+\begin{proof}
+	content...
+\end{proof}
+\begin{Theorem}
+	Let $ V $ be a vector space. Let $ L:V \to W $ be a linear map of $ V $ into another space $ W $. Then
+	\begin{equation}
+		\dim V = \dim \Ker L + \dim \Im L \nonumber
+	\end{equation}
+\end{Theorem}
+\begin{proof}
+	content...
+\end{proof}
+\begin{Theorem}
+	Let $ L:V \to W $ be a linear map. Assume that
+	\begin{equation}
+		\dim V = \dim W \nonumber
+	\end{equation}
+	If $ \Ker L = \{\vec{0} \} $, or if $ \Im L = W $, then $ L $ is bijective.
+\end{Theorem}
+\begin{proof}
+	
+\end{proof}
+%Obsolete
+
+	\chapter{Solving Linear Equations}
+	\section{Systems of Linear Equations}
+	\begin{Definition}
+		A \textit{linear equation} in the variables $ x_1,\cdots,x_n $ is an equation that can be written in the form
+		\begin{equation}
+			a_1 x_1 + a_2 x_2 + \cdots + a_n x_n = b \nonumber
+		\end{equation}
+		where $ b $ and coefficients $ a_i $ are real or complex numbers. A \textit{linear system} is a collection of one or more linear equations involving the same variables. A \textit{solution} of the system is a list of numbers that makes each equation a true statement when their values are substituted for $ x_1,\cdots,x_n $ respectively. The set of all possible solutions is called the \textit{solution set} of the linear system. Two linear systems are called \textit{equivalent} if they have the same solution set.
+	\end{Definition}
+\begin{Definition}
+	A linear system is \textit{consistent} if it has either one solution or infinitely many solutions. If it has no solution, it is called \textit{inconsistent}.
+\end{Definition}
+\begin{Definition}
+	The \textit{coefficient matrix} is the matrix where the coefficients of each variable in a system aligned in columns. If additionally the coefficient of the right-hand side of equations are added to the coefficient matrix, a new matrix called \textit{augmented matrix} is generated.
+\end{Definition}
+\begin{Definition}
+\textit{Elementary row operations} on a matrix include:
+\begin{itemize}
+	\item (\textit{Replacement}) Replace one row by the sum of itself and a multiple of another row.
+	\item (\textit{Interchange}) Interchange two rows.
+	\item (\textit{Scaling}) Multiply all entries in a row by a nonzero constant.
+\end{itemize}
+Two matrices are \textit{row equivalent} if there is a sequence of elementary operations that transforms one matrix into the other.
+\end{Definition}
+\begin{Theorem}
+	If the augmented matrices of two linear systems are row equivalent, then the two systems have the same solution set.
+\end{Theorem}
+\section{Row Reduction and Echelon Forms}
+\begin{Definition}
+	A rectangular matrix is in \textit{echelon form} if it has the following properties:
+	\begin{itemize}
+		\item All nonzero rows are above any rows of all zeros;
+		\item Each leading entry of a row is in a column to the right of the leading entry of the row above it;
+		\item All entries in a column below a leading entry are zero.
+	\end{itemize}
+If a matrix in echelon form satisfies the following additional conditions, then it is in \textit{reduced echelon form}:
+\begin{itemize}
+	\item The leading entry in each nonzero row is $ 1 $;
+	\item Each leading $ 1 $ is the only nonzero entry in its column.
+\end{itemize}
+\end{Definition}
+\begin{Theorem}
+	Each matrix is row equivalent to an unique reduced echelon matrix.
+\end{Theorem}
+If a matrix $ A $ is row equivalent to an (reduced)echelon matrix $ U $, $ U $ is called an \textit{(reduced) echelon form of $ A $}. The abbreviation RREF and REF are used for reduced (row) echelon form and (row) echelon form respectively.
+\begin{Definition}
+	A \textit{pivot position} in a matrix $ A $ is a location in $ A $ that corresponds to a leading entry in an echelon form of $ A $. A \textit{pivot column} is a column of $ A $ that contains a pivot position.
+\end{Definition}
+\begin{Theorem}
+	A linear system is consistent iff the rightmost column of the augmented matrix \textbf{is not} a pivot column, that is, iff an echelon form of the augmented matrix has \textbf{no} row of the form
+	\begin{equation}
+		\begin{bmatrix}
+		0 &\cdots &0 &b
+		\end{bmatrix}\qquad \text{ with $ b $ nonzero}
+		\nonumber
+	\end{equation}
+	If a linear system is consistent, then the solution set contains either
+	\begin{itemize}
+		\item a unique solution, when there are no free variables.
+		\item infinitely many solutions, when there is at least one free variable.
+	\end{itemize}
+	
+\end{Theorem}
+
+\section{Vector Equations}
+\begin{Definition}
+	A matrix with only one column is called a \textit{column vector}, or simply a \textit{vector}.
+\end{Definition}
+
+\begin{Definition}
+	If $ \vec{v}_1,\vec{v}_2,\cdots,\vec{v}_p $ are in $ \Real^n $ , then the set of all linear combinations of them is denoted by $ \spn \{\vec{v}_1,\cdots,\vec{v}_p\} $ and is called the \textit{subset of $ \Real^n $ spanned (or generated) by $ \vec{v}_1,\cdots,\vec{v}_p $}. That is, $ \spn \{\vec{v}_1,\cdots,\vec{v}_p\}$ is the collection of all vectors that can be written in the form
+	\begin{equation}
+		c_1 \vec{v}_1+ \cdots + c_p \vec{v}_p \nonumber
+	\end{equation}
+	with $ c_1,c_2,\cdots,c_p $ scalars.
+	
+\end{Definition}
+
+\section{The Matrix Equation $ \matr{A} \vec{x} =\vec{b} $}
+\begin{Definition}
+	If $ \matr{A} $ is an $ m \times n $ matrix, with columns $ a_1,\cdots,a_n $, and if $ \vec{x} $ is in $ \Real^n $, then the \textit{product of $ \matr{A} $ and $ \vec{x} $}, denoted by $ \matr{A}\vec{x} $, is the \textit{linear combination of the columns of $ \matr{A} $ using the corresponding entries in $ \vec{x} $ as weights}, that is,
+	\begin{equation}
+		\matr{A}\vec{x} = 
+		\begin{bmatrix}
+		a_1 &a_2 &\cdots &a_n
+		\end{bmatrix}
+		\begin{bmatrix}
+		x_1 \\ \cdots \\ x_n
+		\end{bmatrix}
+		=x_1 a_1 + x_2 a_2 + \cdots + x_n a_n \nonumber
+	\end{equation}
+	$ \matr{A}\vec{x} $ is defined only if the number of columns of $ \matr{A} $ equals the number of entries in $ \vec{x} $.
+\end{Definition}
+\begin{Definition}
+	Equations having the form $ \matr{A} \vec{x} =\vec{b} $ are called \textit{matrix equations}.
+\end{Definition}
+\begin{Theorem}
+	If $ \matr{A} $ is an $ m \times n $ matrix, with columns $ a_1,\cdots,a_n $, and $ \vec{b} $ is in $ \Real^m $, the matrix equation
+	\begin{equation}
+		\matr{A} \vec{x} =\vec{b} \nonumber
+	\end{equation}
+	has the same solution set as the vector equation
+	\begin{equation}
+		x_1 a_1 + x_2 a_1 + \cdots + x_n a_n = \vec{b} \nonumber
+	\end{equation}
+	which has the same solution set as the system of linear equations whose augmented matrix is
+	\begin{equation}
+			\begin{bmatrix}
+		a_1 &a_2 &\cdots &a_n &\vec{b}
+		\end{bmatrix}
+		\nonumber
+	\end{equation}
+\end{Theorem}
+\begin{Definition}
+	A set of vectors $ \{\vec{v}_1,\cdots,\vec{v}_p \} $ in $ \Real^m $ \textit{spans (or generates)} $ \Real^m $ if $ \spn \{ \vec{v}_1,\cdots,\vec{v}_p\}=\Real^m $.
+\end{Definition}
+\begin{Theorem}
+	Let $ \matr{A} $ be an $ m \times n $ coefficient matrix. Then the following statements are logically equivalent, that is, for a particular $ \matr{A} $, either they are all true statements or they are all false.
+	\begin{itemize}
+		\item For each $ \vec{b} $ in $ \Real^m $, the equation $ \matr{A} \vec{x} =\vec{b} $ has a solution.
+		\item The columns of $ \matr{A} $ spans $ \Real^m $.
+		\item $ \matr{A} $ has a pivot position in every row.
+	\end{itemize}
+\end{Theorem}
+\begin{Theorem}
+	If $ \matr{A} $ is an $ m \times n $ matrix, $ \vec{u} $ and $ \vec{v} $ are vectors in $ \Real^n $, and $ c $ is a scalar, then
+	\begin{itemize}
+		\item $ \matr{A}(\vec{u}+\vec{v}) =\matr{A}\vec{u} +\matr{A}\vec{v}$.
+		\item $ \matr{A}(c \vec{u})=c ( \matr{A} \vec{u}) $.
+	\end{itemize}
+\end{Theorem}
+
+\section{Solution Sets of Linear Systems}
+\begin{Definition}
+	A system of Linear equations is said to be \textit{homogeneous} if it can be written in the form $  \matr{A} \vec{x} =\vec{0} $. Such a system always has at least one solution, namely, $ \vec{x}=\vec{0} $, and this solution is usually called the \textit{trivial solution}. A homogeneous equation has a nontrivial solution iff the equation has at least one free variable.
+\end{Definition}
+\begin{Definition}
+	Vector addition can be considered as a \textit{translation}. e.g. the vector $ \vec{v} $ is \textit{translated by $ \vec{p} $} to $ \vec{v}+\vec{p} $.
+\end{Definition}
+\begin{Definition}
+	A \textit{parametric vector equation} can be written as
+	\begin{equation}
+		\vec{x}=s \vec{u} + t \vec{v}\qquad (s,t \in \Real) \nonumber
+	\end{equation}
+	which describes explicitly the spanned plane by $ \vec{u} $ and $ \vec{v} $. Whenever a solution set is described explicitly with vectors, we say that the solution is in \textit{parametric vector form}.
+\end{Definition}
+\begin{Theorem}
+	Suppose the equation $ \matr{A} \vec{x} =\vec{b} $ is consistent for some given $ \vec{b} $, and let $ \vec{p} $ be a nonzero solution. Then the solution set of it is the set of all vectors of the form $ \vec{w}=\vec{p}+ \vec{v}_h $, where $ \vec{v_h}  $ is any solution of the homogeneous equation $ \matr{A} \vec{x} =\vec{0}  $.
+\end{Theorem}
+
+\section{Linear Independence}
+\begin{Definition}
+	An indexed set of vectors $ \{\vec{v}_1,\cdots,\vec{v}_p \} $ in $ \Real^n $ is said to be \textit{linearly independent} if the vector equation 
+	\begin{equation}
+		x_1 \vec{v}_1 + x_2 \vec{v}_2 + \cdots + x_p \vec{v}_p = \vec{0} \nonumber
+	\end{equation}
+	has only the trivial solution. The set $ \{\vec{v}_1,\cdots,\vec{v}_p \} $ is said to be \textit{linearly dependent} if there exist weights $ c_1,\cdots,c_p $, not all zero, such that
+	\begin{equation}
+		c_1 \vec{v}_1 + c_2 \vec{v}_2 + \cdots + c_p \vec{v}_p = \vec{0} \nonumber
+	\end{equation}
+	and this equation is called a \textit{linear dependence relation} among $ \vec{v}_1,\cdots,\vec{v}_p  $.
+\end{Definition}
+\begin{Theorem}
+	The columns of a matrix $ \matr{A} $ are linearly independent iff the equation $ \matr{A}\vec{x}=\vec{0} $ has \textbf{only} the trivial solution.
+\end{Theorem}
+\begin{Theorem}
+	A set of two vectors $ \{\vec{v}_1,\vec{v}_2 \} $ is linearly dependent iff one of the vectors is a multiple of the other.
+\end{Theorem}
+\begin{Theorem}
+	An indexed set $ S= \{\vec{v}_1,\cdots,\vec{v}_p \}$ of two or more vectors is linearly dependent iff at least one of the vectors in $ S $ is a linear combination of the others.
+\end{Theorem}
+\begin{Theorem}
+	Any set $ \{\vec{v}_1,\cdots,\vec{v}_p \} $ in $ \Real^n $ is linearly dependent if $ p>n $(Same as the criterion for the existence of solutions in a system of equations).
+\end{Theorem}
+\begin{proof}
+	Since $ p>n $, there are more variables than equations, and therefore nontrivial solutions exist.
+\end{proof}
+\begin{Theorem}
+	If a set $ S= \{\vec{v}_1,\cdots,\vec{v}_p \}$ in $ \Real^n $ contains the zero vector, then the set is linearly dependent.
+\end{Theorem}
+
+\section{Linear Transformations}
+\begin{Definition}
+	A \textit{transformation}(or \textit{function} or \textit{mapping}) from $ \Real^n $ to $ \Real^m $ is a rule that assigns to each vector $ \vec{x} \in \Real^n$ a vector $ T(\vec{x})\in \Real^m $. $ \Real^n $ is called the \textit{domain} of $ T $, and $ \Real^m $ is called the \textit{codomain} of $ T $. For $ \vec{x}\in \Real^n $, the vector $ T(\vec{x})\in \Real^m $ is called the \textit{image} of $ \vec{x} $ under $ T $. The set of all images $ T(\vec{x}) $ is called the \textit{range} of $ T $.
+\end{Definition}
+\begin{Example}
+	Given a scalar $ r $, define $ T: \Real^2 \to \Real^2 $ by $ T(\vec{x})=r \vec{x} $. $ T $ is called a \textit{contraction} when $ 0 \leqslant r \leqslant 1 $ and a \textit{dilation} when $ r>1 $.
+\end{Example}
+\begin{Theorem}
+	Let $ T: \Real^n \to \Real^m $ be a linear transformation. Then there exists a unique matrix $ \matr{A} $ such that
+	\begin{equation}
+		T(\vec{x})=\matr{A}\vec{x}\quad \forall \vec{x}\in \Real^n \nonumber
+	\end{equation}
+	In fact, $ \matr{A} $ is the $ m \times n $ matrix whose $ j $th column is the vector $ T(\vec{e}_j) $, where $ \vec{e}_j $ is the $ j $th column of the identity matrix in $ \Real^n $.
+	\begin{equation}
+		\matr{A}=\begin{bmatrix}
+		T(\vec{e}_1) &\cdots &T(\vec{e}_n) \nonumber
+		\end{bmatrix}
+	\end{equation}
+	The matrix $ \matr{A} $ is called the \textit{standard matrix for the linear transformation $ T $}.
+\end{Theorem}
+\begin{Theorem}
+		Let $ T: \Real^n \to \Real^m $ be a linear transformation. Then $ T $ is injective iff the equation $ T(\vec{x})=\vec{0} $ has only the trivial solution.
+\end{Theorem}
+\begin{Theorem}
+	Let $ T: \Real^n \to \Real^m $ be a linear transformation and let $ \matr{A} $ be the standard matrix for $ T $. Then
+	\begin{itemize}
+		\item $ T $ is surjective iff the columns of $ \matr{A} $ span $ \Real^m $;
+		\item $ T $ is injective iff the columns of $ \matr{A} $ are linearly independent.
+	\end{itemize}
+\end{Theorem}
+\begin{Definition}
+	If there is a matrix $ \matr{A} $ such that 
+	\begin{equation}
+		\vec{x}_{k+1}=\matr{A} \vec{x}_k\quad \text{ for }k=0,1,2,\cdots \nonumber
+	\end{equation}
+	then the equation above is called a \textit{linear difference equation} (or \textit{recurrence relation}).
+\end{Definition}
+
+	\chapter{Matrices}
+
+\section{Subspaces of $ \Real^n $}
+\begin{Definition}
+	A \textit{subspace} of $ \Real^n $ is any set $ H \in \Real^n$ that has three properties:
+	\begin{itemize}
+		\item The zero vector is in $ H $;
+		\item For each vector $ \vec{u} $ and $ \vec{v} $ in $ H $, their sum is in $ H $ (addition is closed on $ H $);
+		\item For each $ \vec{u} $ in $ H $ and each scalar $ c $, the vector $ c \vec{u} $ is in $ H $ (scalar multiplication is closed on $ H $).
+	\end{itemize}
+\end{Definition}
+\begin{Definition}
+	The \textit{column space} of a matrix $ \matr{A} $ is the set $ \col \matr{A} $ of all linear combinations of the columns of $ \matr{A} $.
+\end{Definition}
+\begin{Definition}
+	The \textit{null space} of a matrix $ \matr{A} $ is the set $ \nul \matr{A} $ of all solutions to the homogeneous equation $ \matr{A}\vec{x}=\vec{0} $.
+\end{Definition}
+\begin{Theorem}
+	The null space of a $ m \times n $ matrix is a subspace of $ \Real^n $.
+\end{Theorem}
+\begin{Definition}
+	A \textit{basis} for a subspace $ H $ of $ \Real^n $ is a linearly independent set in $ H $ that spans $ H $.
+\end{Definition}
+\begin{Example}
+	The \textit{standard basis} for $ \Real^n $ are vectors $ \vec{e}_1,\cdots,\vec{e}_n $, where
+	\begin{equation}
+		\vec{e}_1 = \begin{bmatrix}
+		1 \\ 0 \\ \vdots \\ 0
+		\end{bmatrix}
+		,\cdots,\vec{e}_n = \begin{bmatrix}
+		0 \\ 0 \\ \vdots \\ 1
+		\end{bmatrix}\nonumber
+	\end{equation}
+\end{Example}
+\begin{Theorem}
+	The pivot columns of a matrix $ \matr{A} $ form a basis for the column space of $ \matr{A} $.
+\end{Theorem}
+\begin{Definition}
+	Suppose the set $ \mathcal{B}=\{\vec{b}_1,\cdots,\vec{b}_p \} $ is the basis for a subspace $ H $. For each $ \vec{x}\in H $, the \textit{coordinates of $ \vec{x} $ relative to the basis $ \mathcal{B} $} are the weights $ c_1,\cdots,c_p $ such that $ \vec{x}=c_1 \vec{b}_1 + \cdots + c_p \vec{b}_p $, and the vector in $ \Real^p $
+	\begin{equation}
+		[\vec{x}]_{\mathcal{B}}=\begin{bmatrix}
+		c_1 \\ \cdots \\ c_p
+		\end{bmatrix}
+		\nonumber
+	\end{equation}
+	is called the \textit{coordinate vector of $ \vec{x} $ relative to $ \mathcal{B} $}.
+\end{Definition}
+\begin{Definition}
+	The \textit{dimension} of a nonzero subspace $ H $, denoted by $ \dim H $, is the number of vectors in any basis for $ H $. The dimension of the zero subspace $ \{\vec{0}\} $ is defined to be zero.
+\end{Definition}
+\begin{Definition}
+	The \textit{rank} of a matrix $ \matr{A} $, denoted by $ \rank \matr{A} $, is the dimension of the column space of $ \matr{A} $.
+\end{Definition}
+\begin{Theorem}[The Rank Theorem]
+	If a matrix $ \matr{A} $ has $ n $ columns, then $ \rank \matr{A}+ \dim \nul \matr{A}=n $.
+\end{Theorem}
+\begin{proof}
+	The nonpivot columns correspond to the free variables in $ \matr{Ax}=\vec{0} $, and since the number of pivot columns plus the number of nonpivot columns are the number of columns in the matrix, the proof completes.
+\end{proof}
+\begin{Theorem}[The Basis Theorem]
+	Let $ H $ be a $ p $-dimensional subspace of $ \Real^n $. Any linearly independent set of exactly $ p $ elements in $ H $ is automatically a basis for $ H $. Also, any set of $ p $ elements of $ H $ that spans $ H $ is a basis for $ H $.
+\end{Theorem}
+
+	
+	\chapter{Determinants}
+	\section{Determinants and some other Concepts}
+	\begin{Definition}
+		The \textit{determinant} of the matrix $ \matr{A} $
+		\begin{equation}
+		\begin{bmatrix}
+		a &b \\
+		c &d
+		\end{bmatrix} \nonumber
+		\end{equation}
+		denoted $ \det \matr{A} $ and equals $ ad-bc $. Determinant is only defined for a square matrix, but the procedure above can be repeated on higher dimension matrices, for example
+		\begin{equation}
+		\det {\begin{bmatrix}a &b &c &d \\ e &f &g &h \\ i &j &k &l \\ m &n &o &p \end{bmatrix}}
+		=a
+		\det{\begin{bmatrix}f &g &h \\ j &k &l \\ n &o &p \end{bmatrix}}
+		-b
+		\det {\begin{bmatrix}e &g &h \\ i &k &l \\ m &o &p \end{bmatrix}}
+		+c
+		\det {\begin{bmatrix}e &f &h \\ i &j &l \\ m &n &p \end{bmatrix}}
+		-d
+		\det {\begin{bmatrix}e &f &g \\ i &j &k \\ m &n &o \end{bmatrix}} \nonumber
+		\end{equation}
+		By the Leibniz formula for the determinant of an $ n \times n $ matrix $ \matr{A} $ is
+		\begin{equation}
+		\det(\matr{A})= \sum_{\sigma \in S_n}(\sgn(\sigma)\prod_{i=1}^{n}a_{i,\sigma_{i}}) \nonumber
+		\end{equation}
+		Here the sum is computed over all permutations $ \sigma $ of the set $ \{1, 2, …, n\} $. \\
+		A permutation is a function that reorders this set of integers. The value in the $ i $th position after the reordering $ \sigma $ is denoted by $ \sigma_i $. For example, for $ n = 3 $, the original sequence $ 1, 2, 3 $ might be reordered to $ \sigma $ = $ [2, 3, 1] $, with $ \sigma_1  =  2 $, $ \sigma_2  = 3$, and $ \sigma_3  = 1$. The set of all such permutations (also known as the symmetric group on $ n $ elements) is denoted by $ S_n $. \\
+		For each permutation $ \sigma $, $ \sgn(\sigma) $ denotes the signature of $ \sigma $, a value that is $ +1  $ whenever the reordering given by $ \sigma $ can be achieved by successively interchanging two entries an even number of times, and $ -1 $ whenever it can be achieved by an odd number of such interchanges.
+		
+	\end{Definition}
+	\begin{Definition}
+		If $ \matr{A} $ is a square matrix, then the \textit{minor} of the entry in the $ i $-th row and $ j $-th column (also called the \textit{$ (i,j) $ minor}, or a \textit{first minor}) is the determinant of the submatrix formed by deleting the $ i $-th row and $ j $-th column. This number is often denoted $ M_{i,j} $. The $ (i,j) $ \textit{cofactor} is obtained by multiplying the minor by $ (-1)^{i+j} $ and is denoted $ C_{i,j} $. \newpara
+		In general, let A be an $ m \times n $ matrix and $ k $ an integer with $ 0 < k \leqslant m $, and $ k \leqslant n $. A $ k \times k $ minor of $ \matr{A} $, also called minor determinant of order $ k $ of $ \matr{A} $ or, if $ m=n $, $ (n-k) $th minor determinant of $  \matr{A} $, is the determinant of a $ k \times k $ matrix obtained from $ \matr{A} $ by deleting $ m - k $ rows and $ n - k $ columns. 
+	\end{Definition}
+	\begin{Definition}
+		The matrix formed by all of the cofactors of a square matrix A is called the \textit{cofactor matrix}.
+	\end{Definition}
+	\begin{Definition}
+		The \textit{adjugate} is the transpose of the cofactor matrix of it, that is, if $ \matr{A} $ is a matrix and $ \matr{C} $ is its cofactor matrix, then
+		\begin{equation}
+		\adj(\matr{A})=\matr{C}^T \nonumber
+		\end{equation}
+	\end{Definition}
+\begin{Theorem}
+	For a invertible matrix $ n \times n $ $ \matr{A} $
+	\begin{equation}
+	\matr{A}\adj(\matr{A}) = \det(\matr{A})\matr{I} \nonumber
+	\end{equation}
+	or equivalently
+	\begin{equation}
+	\matr{A}^{-1}=\frac{1}{\det \matr{A}}\adj \matr{A}\nonumber
+	\end{equation}
+\end{Theorem}
+\begin{Theorem}
+	The determinant of an square matrix can be computed by a cofactor expansion across any row or down any column. The expansion across the $ i $th row is
+	\begin{equation}
+		\det \matr{A}=a_{i1}C_{i1}+\cdots +a_{in}C_{in}\nonumber
+	\end{equation}
+\end{Theorem}
+\begin{Theorem}
+	If $ \matr{A} $  is a triangular matrix, then $ \det \matr{A} $ is the product of the entries on the main diagonal of $ \matr{A} $.
+\end{Theorem}
+\section{Properties of Determinants}
+\begin{Definition}
+	An elementary matrix is called an \textit{row replacement} if it is obtained from the identity matrix by adding a multiple of one row to another; it's called an \textit{interchange} if it is obtained by interchanging two rows of identity; and it's called a \textit{scale by $ r $} if it is obtained by multiplying a row of identity by a nonzero scalar $ r $.
+\end{Definition}
+	\begin{Theorem}
+		Let $ \matr{A} $ be a square matrix.
+		\begin{itemize}
+			\item If a multiple of one row of $ \matr{A} $ is added to another row to produce a matrix $ \matr{B} $, then $ \det \matr{A}=\det \matr{B} $.
+			\item If two rows of $ \matr{A} $ are interchanged to produce $ \matr{B} $, then $ \det \matr{B}=-\det \matr{A} $.
+			\item If one row of $ \matr{A} $ is multiplied by $ k $ to produce $ \matr{B} $, then $ \det \matr{B}=k \cdot\det \matr{A} $.
+		\end{itemize}
+	or, equivalently, if $ \matr{A} $ is an $ n \times n $ matrix and $ \matr{E} $ is an $ n \times n $ elementary matrix, then
+	\begin{equation}
+		\det \matr{EA}=(\det \matr{E})(\det \matr{A}) \nonumber
+	\end{equation}
+	where $ \det \matr{E} $ assumes $ 1,-1,r $ respectively for $ \matr{E} $ is a row replacement, an interchange, and a scale by $ r $.
+	\end{Theorem}
+
+\begin{Theorem}
+	If $ \matr{A} $ is an $ n \times n $ matrix, then $ \det \matr{A}^T= \det \matr{A}$.
+\end{Theorem}
+	\begin{Theorem}
+		If $ \matr{A} $ and $ \matr{B} $ are $ n \times n $ matrices, then $ \det \matr{AB}=(\det \matr{A})(\det \matr{B} )$.
+	\end{Theorem}
+\begin{Example}
+	If all columns except one are held fixed in a square matrix, then its determinant is a linear function of that one(vector) variable.
+\end{Example}
+	Let $ \matr{A}_i(\vec{b}) $ denote the matrix obtained from $ \matr{A} $ by replacing column $ i $ by the vector $ \vec{b} $.
+\begin{Theorem}
+ If $ \matr{A} $ is an invertible $ n\times n $ matrix. For any $ \vec{b}\in \Real^n $, then unique solution $ \vec{x} $ of $ \matr{A}\vec{x}=\vec{b} $ has entries given by
+ \begin{equation}
+ 	x_i=\frac{\det \matr{A}_i(\vec{b})}{\det \matr{A}},\qquad i=1,2,\cdots,n \nonumber
+ \end{equation}
+\end{Theorem}
+	\begin{Theorem}
+		If $ \matr{A} $ is a $ 2 \times 2 $ matrix, the area of the parallelogram determined by the columns of $ \matr{A} $ is $ |\det \matr{A}| $. If $ \matr{A} $ is a $ 3 \times 3 $ matrix, the volume of the parallelepiped determined by the columns of $ \matr{A} $ is $ |\det \matr{A}| $.
+	\end{Theorem}
+\begin{Theorem}
+	Let $ T:\Real^2 \to \Real^2 $ be the linear transformation determined by a $ 2 \times 2 $ matrix $ \matr{A} $. If $ S $ is a parallelogram in $ \Real^2 $, then
+	\begin{equation}
+		\{\text{area of }T(S) \}=|\det \matr{A}| \cdot 	\{\text{area of }S \} \nonumber
+	\end{equation}
+	and similar, if in $ \Real^3 $ $ S $ is a parallelepiped, then
+	\begin{equation}
+			\{\text{volume of }T(S) \}=|\det \matr{A}| \cdot 	\{\text{volumn of }S \} \nonumber
+	\end{equation}
+	These conclusions hold whenever $ S $ has finite area or finite volume.
+\end{Theorem}
+	
+	
+	\chapter{Vector Spaces}
+
+
+
+	\begin{Theorem}
+		If $ \vec{v}_1,\cdots,\vec{v}_p $ are in a vector space $ V $, then $ \spn \{\vec{v}_1,\cdots,\vec{v}_p\} $ is a subspace of $ V $ and is called the \textit{subspace spanned} (or \textit{generated}) by $ \{\vec{v}_1,\cdots,\vec{v}_p\}  $. Given any subspace $ H $ of $ V $, a \textit{spanning} (or \textit{generating}) \textit{set} for $ H $ is a set $ \{\vec{v}_1,\cdots,\vec{v}_p\}  $ in $ H $ such that $ H =   \spn \{\vec{v}_1,\cdots,\vec{v}_p\} $.
+	\end{Theorem}
+\begin{Definition}
+	The \textit{null space} of an $ m \times n $ matrix $ \matr{A} $, written as $ \nul \matr{A} $, is the set of all solutions to the homogeneous equation $ \matr{A}\vec{x}=\vec{0} $.
+\end{Definition}
+\begin{Theorem}
+	The null space of an $ m \times n $ matrix $ \matr{A} $ is a subspace of $ \Real^n $.
+\end{Theorem}
+\begin{Definition}
+	The \textit{column space} of an $ m \times n $ matrix, written as $ \col \matr{A} $, is the set of all linear combinations of the columns of $ \matr{A} $.
+\end{Definition}
+\begin{Theorem}
+	The column space of an $ m \times n $ matrix is a subspace of $ \Real^n $.
+\end{Theorem}
+\begin{Theorem}
+	The column space of an $ m \times n $ matrix $ \matr{A} $ is all of $ \Real^m $ iff the equation $ \matr{A}\vec{x}=\vec{b} $ has a solution for each $ \vec{b}\in \Real^m $.
+\end{Theorem}
+\begin{Definition}
+	For a linear transformation $ T $ from a vector space $ V $ into a vector space $ W $, the \textit{kernel}(or \textit{null space}) of $ T $ is the set of all $ \vec{u}\in V $ such that $ T(\vec{u})=\vec{0} $. The range of $ T $ is the set of all vectors in $ W $ of the form $ T(\vec{x}) $ for some $ \vec{x} \in V$. If $ T $ can be written as a matrix transformation, then the kernel and the range of $ T $ are just the null space and the column space of that matrix. Kernel is a subspace of $ V $, and range is a subspace of $ W $.
+\end{Definition}
+
+\begin{Theorem}
+	An indexed set $ \{\vec{v}_1,\cdots,\vec{v}_p \} $ of two or more vectors, with $ \vec{v}_1 = \vec{0} $, is linearly dependent iff some $ \vec{v}_j $ with $ j>1 $ is a linear combination of the preceding vectors, $ \vec{v}_1,\cdots,\vec{v}_{j-1} $.
+\end{Theorem}
+\begin{Definition}
+	Let $ H $ be a subspace of a vector space $ V $. An indexed set of vectors $ \mathcal{B}=\{\vec{b}_1,\cdots,\vec{b}_p \} $ in $ V $ is a \textit{basis} for $ H $ if
+	\begin{enumerate}
+		\item $ \mathcal{B} $ is a linearly independent set;
+		\item the subspace spanned by $ \mathcal{B} $ coincides with $ H $.
+	\end{enumerate}
+\end{Definition}
+\begin{Theorem}
+	Let $ S = \{\vec{v}_1,\cdots,\vec{v}_p \} $ be a set in $ V $ and let $ H = \spn \{\vec{v}_1,\cdots,\vec{v}_p \}$.
+	\begin{enumerate}
+		\item If one of the vectors in $ S $ is a linear combination of the remaining vectors in $ S $, then the set formed from $ S $ by removing this vector still spans $ H $.
+		\item If $ H \neq \{\vec{0} \} $, some subset of $ S $ is a basis for $ H $.
+	\end{enumerate}
+\end{Theorem}
+	\begin{Theorem}
+		The pivot columns of a matrix $ \matr{A} $ form a basis for $ \col \matr{A} $.
+	\end{Theorem}
+\section{Coordinate Systems}
+\begin{Theorem}
+	Let $ \mathcal{B}= \{\vec{b}_1,\cdots,\vec{b}_p \} $ be a basis for a vector space $ V $. Then for each $ \vec{x} \in V$, there exists a unique set of scalars $ c_1,\cdots,c_n $ such that
+	\begin{equation}
+		\vec{x}=c_1 \vec{b}_1 + \cdots + c_n \vec{b}_n \nonumber
+	\end{equation}
+\end{Theorem}
+\begin{Definition}
+	Suppose the set $ \mathcal{B}= \{\vec{b}_1,\cdots,\vec{b}_p \} $ is a basis for $ V $ and $ \vec{x}\in V $. The \textit{coordinate of $ \vec{x} $ relative to the basis $ \mathcal{B} $} (or the \textit{$ \mathcal{B} $-coordinates of $ \vec{x} $}) are the weights $ c_1,\cdots,c_n $ such that $ \vec{x}= c_1 \vec{b}_1 + \cdots + c_n \vec{b}_n $.\newpara
+	 The vector
+	\begin{equation}
+		[\vec{x}]_\mathcal{B}=\begin{bmatrix}
+		c_1 \\
+		\vdots \\
+		c_n
+		\end{bmatrix} \nonumber
+	\end{equation}
+	is the \textit{coordinate vector of $ \vec{x} $(relative to $ \mathcal{B} $)}, or the \textit{$ \mathcal{B} $-coordinate vector of $ \vec{x} $}. The mapping $ \vec{x}\mapsto [\vec{x}]_\mathcal{B} $ is the \textit{coordinate mapping(determined by $ \mathcal{B} $)}.
+\end{Definition}
+\begin{Definition}
+	The matrix
+	\begin{equation}
+		\vec{P}_\mathcal{B}=[\vec{b}_1,\cdots,\vec{b}_p ] \nonumber
+	\end{equation}
+	is called the \textit{change-of-coordinates matrix} from $ \mathcal{B} $ to the standard basis in $ \Real^n $, since for a vector $ \vec{x}= c_1 \vec{b}_1 + \cdots + c_n \vec{b}_n$ we obtain the relationship
+	\begin{equation}
+		\vec{x}=\vec{P}_\mathcal{B} [\vec{x}]_{\mathcal{B}}\nonumber
+	\end{equation}
+\end{Definition}
+\begin{Theorem}
+	Let $ \mathcal{B} $ be a basis for a vector space $ V $. Then the coordinate mapping $  \vec{x}\mapsto [\vec{x}]_\mathcal{B}  $ is an injective linear transformation from $ V $ into $ \Real^n $.
+\end{Theorem}
+	In general, an injective linear transformation from a vector space $ V $ onto another vector space $ W $ is called an \textit{isomorphism} from $ V $ onto $ W $.
+\begin{Theorem}
+	If a vector space $ V $ has a basis $ \mathcal{B}= \vec{b}_1,\cdots,\vec{b}_n $, then any set in $ V $ containing more than $ n $ vectors must be linearly dependent.
+\end{Theorem}
+\begin{Theorem}
+	If a vector space $ V $ has a basis of $ n $ vectors, then every basis of $ V $ must consist of exactly $ n $ vectors.
+\end{Theorem}
+\begin{Definition}
+	If $ V $ is spanned by a finite set, then $ V $ is said to be \textit{finite-dimensional}, and the \textit{dimension} of $ V $, written as $ \dim V $, is the number of vectors in a basis for $ V $. If $ V $ is not spanned by a finite set, then $ V $ is said to be \textit{infinite-dimensional}.
+\end{Definition}
+\begin{Theorem}
+	Let $ H $ be a subspace of a finite-dimensional vector space $ V $. Any linearly independent set in $ H $ can be expanded, if necessary, to a basis for $ H $. Also, $ H $ is finite-dimensional and
+	\begin{equation}
+		\dim H \leqslant \dim V \nonumber
+	\end{equation}
+\end{Theorem}
+	\begin{Theorem}[The Basis Theorem]
+		Let $ V $ be a $ p $-dimensional vector space, $ p \geqslant 1 $. Any linearly independent set of exactly $ p $ elements in $ V $ is automatically a basis for $ V $. Any set of exactly $ p  $ elements that spans $ V $ is a basis for $ V $.
+	\end{Theorem}
+The dimension of $ \nul \matr{A} $ is the number of free variables in $ \matr{A}\vec{x}=\vec{0} $, and the dimension of $ \col \matr{A} $ is the number of pivot columns in $ \matr{A} $.
+\section{Rank}
+\begin{Definition}
+	The set of all linear combinations of the row vectors in $ \matr{A} $ is called the \textit{row space} of $ \matr{A} $ and denoted $ \row \matr{A} $.
+\end{Definition}
+	\begin{Theorem}
+		If two matrices $ \matr{A} $ and $ \matr{B} $ are row equivalent, then their row spaces are the same. If $ \matr{B} $ is in echelon form, the nonzero rows of $ \matr{B} $ form a basis for the row space of $ \matr{A} $ as well as $ \matr{B} $.
+	\end{Theorem}
+\begin{Definition}
+	The \textit{rank} of $ \matr{A} $ is the dimension of the column space of $ \matr{A} $.
+\end{Definition}
+\begin{Theorem}[The Rank Theorem]
+	The dimensions of the column space and the row space of an $ m \times n $ matrix $ \matr{A} $ are equal. This common dimension, the rank of $ \matr{A} $, also equals the number of pivot positions in $ \matr{A} $ and satisfies the equation
+	\begin{equation}
+		\rank \matr{A} + \dim \nul \matr{A} = n\nonumber
+	\end{equation}
+\end{Theorem}
+\section{Change of Basis}
+	\begin{Theorem}
+		Let $ \mathcal{B}= \{\vec{b}_1,\cdots,\vec{b}_n  \}$ and $ \mathcal{C}= \{\vec{c}_1,\cdots,\vec{c}_n  \}$ be bases of a vector space $ V $. Then there is an $ n \times n $ matrix $ \underset{\mathcal{C} \gets \mathcal{B}}{\matr{P}} $, called the \textit{change-of-coordinates matrix from $ \mathcal{B} $ to $ \mathcal{C} $}, such that
+		\begin{equation}
+			[\vec{x}]_{\mathcal{C}}= \underset{\mathcal{C} \gets \mathcal{B}}{\matr{P}} 	[\vec{x}]_{\mathcal{B}}\nonumber
+		\end{equation}
+		The columns of $ \underset{\mathcal{C} \gets \mathcal{B}}{\matr{P}} $ are the $ \mathcal{C} $-coordinate vectors of the vectors in the basis $ \mathcal{B} $, that is 
+		\begin{equation}
+			 \underset{\mathcal{C} \gets \mathcal{B}}{\matr{P}}  = \begin{bmatrix}
+			 [\vec{b}_1]_{\mathcal{C}} &[\vec{b}_2]_{\mathcal{C}} &\cdots &[\vec{b}_n]_{\mathcal{C}}
+			 \end{bmatrix}\nonumber
+		\end{equation}
+	\end{Theorem}
+	Because the columns of this matrix are linearly independent, since they are the coordinate vectors of the linearly independent set $ \mathcal{B} $, it follows that $ \underset{\mathcal{C} \gets \mathcal{B}}{\matr{P}} $ is invertible, and we have
+	\begin{equation}
+		(\underset{\mathcal{C} \gets \mathcal{B}}{\matr{P}})^{-1}=\underset{\mathcal{B} \gets \mathcal{C}}{\matr{P}} \nonumber
+	\end{equation}
+	\chapter{Eigenvalues and Eigenvectors}
+	\section{Definition}
+	\begin{Definition}
+		An \textit{eigenvector} of an $ n \times n $ matrix $ \matr{A} $ is a nonzero vector $ \vec{x} $ such that $ \matr{A}\vec{x}=\lambda \vec{x} $ for some scalar $ \lambda $. A scalar $ \lambda $ is called an \textit{eigenvalue} of $ \matr{A} $ if there is a nontrivial solution $ \vec{x} $ of $ \matr{A}\vec{x}=\lambda \vec{x}  $; such an $ \vec{x} $ is called an \textit{eigenvector corresponding to $ \lambda $}.
+	\end{Definition}
+\begin{Definition}
+	The set of all solutions of
+	\begin{equation}
+		(\matr{A}-\lambda \matr{I})\vec{x}=\vec{0} \nonumber
+	\end{equation}
+	is a subspace of $ \Real^n $ and is called the \textit{eigenspace} of $ \matr{A} $ corresponding to $ \lambda $.
+\end{Definition}
+\begin{Theorem}
+	The eigenvalues of a triangular matrix are the entries on its main diagonal.
+\end{Theorem}
+\begin{Theorem}[The Invertible Matrix Theorem]
+	Let $ \matr{A} $ be an $ n \times n $ matrix. Then $ \matr{A} $ is invertible iff the number $ 0 $ is not an eigenvalue of $ \matr{A} $.
+\end{Theorem}
+	\begin{Theorem}
+		If $ \vec{v}_1,\cdots,\vec{v}_r $ are eigenvectors that corresponding to distinct eigenvalues $ \lambda_1,\cdots,\lambda_r $ of an $ n \times n $ matrix $ \matr{A} $, then the set $ \{\vec{v}_1,\cdots,\vec{v}_r \} $ is linearly independent.
+	\end{Theorem}
+\begin{Definition}
+	The scalar equation $ \det (\matr{A}-\lambda \matr{I})=0 $ is called the \textit{characteristic equation} of $ \matr{A} $. If $ \matr{A} $ is an $ n \times n $ matrix, then $  \det (\matr{A}-\lambda \matr{I}) $ is a polynomial of degree $ n $ called the \textit{characteristic polynomial} of $ \matr{A} $.
+\end{Definition}
+\begin{Theorem}
+	A scalar $ \lambda $ is an eigenvalue of an $ n \times n $ matrix $ \matr{A} $ iff $ \lambda $ satisfies the characteristic equation.
+\end{Theorem}
+	\begin{Definition}
+		If $ \matr{A} $ and $ \matr{B} $ are $ n \times n $ matrices, then $ \matr{A} $ and $ \matr{B} $ are \textit{similar} if there is an invertible matrix $ \matr{P} $ such that $ \matr{P}^{-1}\matr{AP}=\matr{B} $. Changing $ \matr{A} $ into $  \matr{P}^{-1}\matr{AP} $ is called a \textit{similarity transformation}.
+	\end{Definition}
+	\begin{Theorem}
+		If $ n \times n $ matrices $ \matr{A} $ and $ \matr{B} $ are similar, then they have the same characteristic polynomial and hence the same eigenvalues(with the same multiplicities).
+	\end{Theorem}
+\section{Diagonalization}
+\begin{Definition}
+	A square matrix $ \matr{A} $ is said to be \textit{diagonalizable} if $ \matr{A} $ is similar to a diagonal matrix.
+\end{Definition}
+\begin{Theorem}
+	An $ n \times n $ matrix $ \matr{A} $ is diagonalizable iff $ \matr{A} $ has $ n $ linearly independent eigenvectors. In other words, $ \matr{A} $ is diagonalizable iff there are enough eigenvectors to form a basis of $ \Real^n $, and such basis is called an \textit{eigenvector basis}.
+\end{Theorem}	
+\begin{Theorem}
+	An $ n \times n $ matrix with $ n $ distinct eigenvalues is diagonalizable.
+\end{Theorem}
+	\begin{Theorem}
+		Let $ \matr{A} $ be an $ n \times n $ matrix whose distinct eigenvalues are $ \lambda_1,\cdots,\lambda_p $.
+		\begin{enumerate}
+			\item For $ 1 \leqslant k \leqslant p $, the dimension of the eigenspaces for $ \lambda_k $ is less than or equal to the multiplicity of the eigenvalue $ \lambda_k $.
+			\item The matrix $ \matr{A} $ is diagonalizable iff the sum of the dimensions of the distinct eigenspaces equals $ n $, and this happens iff the dimension of the eigenspace for each $ \lambda_k $ equals the multiplicity of $ \lambda_k $.
+			\item If $ \matr{A} $ is diagonalizable and $ \mathcal{B}_k $ is a basis for the eigenspace corresponding to $ \lambda_k $ for each $ k $, then the total collection of vectors in the sets $ \mathcal{B}_1,\cdots,\mathcal{B}_p $ forms an eigenvector basis for $ \Real^n $.
+		\end{enumerate}
+	\end{Theorem}
+	\begin{Definition}
+		The matrix
+		\begin{equation}
+			\matr{M}=\begin{bmatrix}
+			[T(\vec{b}_1)]_{\mathcal{C}} &[T(\vec{b}_2)]_{\mathcal{C}} &\cdots &[T(\vec{b}_n)]_{\mathcal{C}}
+			\end{bmatrix} \nonumber
+		\end{equation}
+		where $ \mathcal{B}=\{\vec{b}_1,\cdots,\vec{b}_n \} $ is a basis for the vector space $ V $, $ \mathcal{C} $ is a basis in $ W $, and $ T $ is a linear transformation from $ V $ to $ W $, is called the \textit{matrix for $ T $ relative to the bases $ \mathcal{B} $ and $ \mathcal{C} $}. If $ W $ is the same as $ V $ and the basis $ \mathcal{C} $ is the same as $ \mathcal{B} $, the matrix $ \matr{M} $ is called the \textit{matrix for $ T $ relative to $ \mathcal{B} $} or the \textit{$ \mathcal{B} $-matrix for $ T $}, and denoted $ [T]_{\mathcal{B}} $.
+	\end{Definition}
+	\begin{Theorem}[Diagonal Matrix Representation]
+		Suppose $ \matr{A}=\matr{PD}\matr{P}^{-1} $, where $ \matr{D} $ is a diagonal $ n \times n $ matrix. If $ \mathcal{B} $ is the basis for $ \Real^n $ formed from the columns of $ \matr{P} $, then $ \matr{D} $ is the $ \mathcal{B} $-matrix of the transformation $ \vec{x}\mapsto \matr{A}\vec{x} $.
+	\end{Theorem}
+\section{Complex Eigenvalues}
+The theory of eigenvalues and eigenvectors developed for $ \Real^n $ applies equally well on $ \Complex^n $.
+\begin{Theorem}
+	Let $ \matr{A} $ be a real $ 2 \times 2 $ matrix with a complex eigenvalue $ \lambda=a-b \iu  (b \neq 0)$ and associated eigenvector $ \vec{v}\in \Complex^2 $. Then
+	\begin{equation}
+		\matr{A}=\matr{PC}\matr{P}^{-1},\quad \text{where}\quad \matr{P}=\begin{bmatrix}
+		\Re \vec{v} & \Im \vec{v}
+		\end{bmatrix} \quad \text{and}\quad \vec{C}=\begin{bmatrix}
+		a &-b \\ 
+		b &a
+		\end{bmatrix} \nonumber
+	\end{equation}
+\end{Theorem}
+
+\chapter{Orthogonality}
+\begin{Definition}
+	If a vector $ \vec{z} $ is orthogonal to every vector in a subspace $ W $ of $ \Real^n $, then $ \vec{z} $ is said to be \textit{orthogonal} to $ W $. The set of all vectors $ \vec{z} $ that are orthogonal to $ W $ is called the \textit{orthogonal complement} of $ W $ and denoted by $ W^\perp $.
+\end{Definition}
+\begin{Theorem}
+	\begin{enumerate}
+		\item A vector $ \vec{x} $ is in $ W^\perp $ iff $ \vec{x} $ is orthogonal to every vector in a set that spans $ W $.
+		\item $ W^\perp $ is a subspace of $ \Real^n $.
+	\end{enumerate}
+\end{Theorem}
+\begin{proof}
+	\exercise
+\end{proof}
+\begin{Theorem}
+	Let $ \matr{A} $ be an $ m \times n $ matrix. Then the orthogonal complement of the row space of $ \matr{A} $ is the nullspace of $ \matr{A} $, and the orthogonal complement of the column space of $ \matr{A} $ is the nullspace of $ \matr{A}^T $:
+	\begin{equation}
+		(\row \matr{A})^\perp = \nul \matr{A},\qquad (\col \matr{A})^\perp = \nul \matr{A}^T \nonumber
+	\end{equation}
+\end{Theorem}
+\section{Orthogonal Sets}
+\begin{Definition}
+	A set of vectors in $ \Real^n $ is said to be an \textit{orthogonal set} if each pair of distinct vectors from the set is orthogonal.
+\end{Definition}
+\begin{Theorem}
+	If $ S=\{\vec{u}_1,\cdots,\vec{u}_p \} $ is an orthogonal set of nonzero vectors in $ \Real^n $, then $ S $ is linearly independent and hence is a basis for the subspace spanned by $ S $.
+\end{Theorem}
+\begin{Definition}
+	An \textit{orthogonal basis} for a subspace $ W $ of $ \Real^n $ is a basis for $ W $ that is also an orthogonal set.
+\end{Definition}
+\begin{Theorem}
+	Each vector in a subspace of $ \Real^n $ has a unique representation as a linear combination of its orthogonal basis.
+\end{Theorem}
+\begin{Definition}
+	The \textit{orthogonal projection} of $\vec{v}$ on an arbitrary non-zero vector $\vec{b}$ can be written as:
+	\begin{equation}
+	\proj_{\vec{b}}\vec{v} = \frac{\vec{v} \cdot \vec{b}}{\norm{\vec{b}}^2}\vec{b}
+	\end{equation}
+	Moreover, we can see that $\vec{v} - proj_{\vec{b}}\vec{v}$ is the vector component of $\vec{v}$ orthogonal to $\vec{b}$. The projection $ proj_{\vec{b}}\vec{v} $ is determined by the subspace $ \spn \{\vec{b}\} $, and we may call it the \textit{orthogonal projection onto} $ \spn \{\vec{b}\} $.
+\end{Definition}
+\begin{Definition}
+	A set is an \textit{orthonormal set} if it is an orthogonal set of unit vectors. It is also an \textit{orthonormal basis} for a subspace spanned by it.
+\end{Definition}
+\begin{Theorem}
+	An $ m \times n $ matrix $ \matr{U} $ has orthonormal columns iff $ \matr{U}^T \matr{U}=\matr{I} $.
+\end{Theorem}
+\begin{Theorem}
+	Let $ \matr{U} $ be an $ m \times n $ matrix with orthonormal columns, and let $ \vec{x},\vec{y} \in \Real^n $. Then
+	\begin{enumerate}
+		\item $ \norm{\matr{U}\vec{x}}=\norm{\vec{x}} $.
+		\item $ \norm{\matr{U}\vec{x}} \cdot \norm{\matr{U}\vec{y}} =\vec{x} \cdot \vec{y}$, and it equals zero iff $ \vec{x}\cdot \vec{y}=0 $.
+	\end{enumerate}
+Equivalently, they say that the linear mapping $ \vec{x}\mapsto  \matr{U}\vec{x} $ preserves lengths and orthogonality.
+\end{Theorem}
+\begin{Definition}
+	An \textit{orthogonal matrix} is a square invertible matrix $ \matr{U} $ such that $ \matr{U}^{-1}=\matr{U}^T $.
+\end{Definition}
+\section{Orthogonal Projections}
+\begin{Theorem}
+	Let $ W $ be a subspace of $ \Real^n $. Then each $ \vec{y}\in \Real^n $ can be written uniquely in the form
+	\begin{equation}
+		\vec{y}=\hat{\vec{y}}+\vec{z} \nonumber
+	\end{equation}
+	where $ \hat{\vec{y}} $ is in $ W $ and $ \vec{z} $ is in $ W^\perp $. In fact, if $ \{\vec{u}_1,\cdots,\vec{u}_p \} $ is any orthogonal basis of $ W $, then
+	\begin{equation}
+		\hat{\vec{y}}= \proj_{\vec{u}_1}\vec{y}+\cdots +\proj_{\vec{u}_p}\vec{y} \nonumber
+	\end{equation}
+	and $ \vec{z}=\vec{y}-\hat{\vec{y}} $.
+\end{Theorem}
+The vector $ \hat{\vec{y}} $ is called the \textit{orthogonal projection of $ \vec{y} $ onto $ W $} and written as $ \proj_{W}\vec{y} $.
+\begin{Theorem}
+	Let $ W $ be a subspace of $ \Real^n $, $ \vec{y}\in\Real^n $, and $ \hat{\vec{y}} $ the orthogonal projection of $ \vec{y} $ onto $ W $. Then $ \hat{\vec{y}} $ is the closest point in $ W $ to $ \vec{y} $, in the sense that
+	\begin{equation}
+		\norm{\vec{y}-\hat{\vec{y}}}<\norm{\vec{y}-\vec{v}} \nonumber
+	\end{equation}
+	for all $ \vec{v}\in W $ distinct from $ \hat{\vec{y}} $.
+\end{Theorem}
+\begin{Theorem}
+	If $ \{\vec{u}_1,\cdots,\vec{u}_p \} $ is an orthonormal basis for a subspace $ W \in \Real^n $, then
+	\begin{equation}
+		\proj_{W}\vec{y}=(\vec{y}\cdot \vec{u}_1)\vec{u}_1 + \cdots +(\vec{y}\cdot \vec{u}_p)\vec{u}_p\nonumber
+	\end{equation}
+	If $ \matr{U} =\begin{bmatrix}
+	\vec{u}_1 &\cdots &\vec{u}_p 
+	\end{bmatrix}$, then
+	\begin{equation}
+		\proj_{W}\vec{y}=\matr{U}\matr{U}^T \vec{y}\nonumber
+	\end{equation}
+\end{Theorem}
+\chapter{Symmetric Matrices and Quadratic Forms}
+\begin{Definition}
+	A \textit{symmetric matrix} is a matrix such that it equals to the transpose of itself.
+\end{Definition}
+\begin{Definition}
+	A \textit{quadratic form} on $ \Real^n $ is a function $ Q $ defined on $ \Real^n $ whose value at a vector $ \vec{x}\in \Real^n $ can be computed by an expression of the form $ Q(\vec{x})=\vec{x}\matr{A}^T \vec{x} $, where $ \matr{A} $ is an $ n \times n $ symmetric matrix. The matrix $ \matr{A} $ is called the \textit{matrix of the quadratic form}. The simplest example of a nonzero quadratic form is where the matrix of the quadratic form is the $ n \times n $ identity matrix.
+\end{Definition}
+\begin{Definition}
+	A quadratic form $ Q $ is:
+	\begin{enumerate}
+		\item \textit{positive definite} if $ Q(\vec{x}) >0$ for all $ \vec{x}\neq \vec{0} $,
+		\item \textit{negative definite} if $ Q(\vec{x}) <0$ for all $ \vec{x}\neq \vec{0} $, 
+		\item \textit{indefinite} if $ Q(\vec{x}) $ assumes both positive and negative values.
+	\end{enumerate}
+\end{Definition}
+\begin{Theorem}
+	Let $ \matr{A} $ be an $ n \times n $ symmetric matrix. Then a quadratic form $ \vec{x}\matr{A}^T \vec{x}  $ is:
+		\begin{enumerate}
+		\item positive definite iff the eigenvalues of $ \matr{A} $ are all positive,
+		\item negative definite iff the eigenvalues of $ \matr{A} $ are all negative, 
+		\item indefinite iff the eigenvalues of $ \matr{A} $ has both positive and negative eigenvalues.
+	\end{enumerate}
+\end{Theorem}
+\begin{Definition}
+	A \textit{positive definite matrix} $ \matr{A} $ is a symmetric matrix for which the quadratic form is positive definite. The matrix is a \textit{positive semidefinite matrix} if its quadratic form is nonnegative. Other terms are defined analogously.
+\end{Definition}
+
+
+	
+%Obsolete
+\end{document}
