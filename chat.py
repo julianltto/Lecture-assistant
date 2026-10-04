@@ -1,23 +1,32 @@
 import anthropic
+from rag import retrieve
 
-
-notes = open("data/lecture_notes/Linear_Algebra.tex", encoding="utf-8").read()
 client = anthropic.Anthropic()
 RULES = "You are the TA of this lecture. Answer only from the notes below. Cite pages as [p.X]."
-system = [
-    {"type": "text", "text": RULES},
-    {"type": "text", "text": "<lecture>\n" + notes + "\n<lecture>"},
-]
+MAX_TURNS = 4
+
 messages = []
+questions = []
+
+def build_system_prompt(query):
+    hits = retrieve(query)
+    print("[retrieved:", [p["page"] for p in hits], "]")
+    body = "\n\n".join(f'<page n="{p["page"]}">\n{p["text"]}\n</page>' for p in hits)
+    return RULES + "\n\n" + body
 
 while True:
-    question = input("\nquestion> ".strip())
+    question = input("\nquestion> ").strip()
     if question == "quit":
         break
+    if not question:
+        continue
 
+    questions.append(question)
+    system = build_system_prompt(" ".join(questions[-3:]))
     messages.append({"role": "user", "content": question})
-    print("\nanswer> ", end="", flush=True)
+    messages = messages[-2 * MAX_TURNS + 1:]
 
+    print("\nanswer> ", end="", flush=True)
     with client.messages.stream(
         model="claude-haiku-4-5",
         max_tokens=1000,

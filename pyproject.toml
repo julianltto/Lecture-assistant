@@ -6,4 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "anthropic>=1.11.0",
+    "fastapi>=0.142.2",
+    "rank-bm25>=0.2.2",
+    "uvicorn>=0.54.0",
 ]
