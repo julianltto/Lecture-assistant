@@ -1,42 +1,58 @@
-import json, time, uuid
+import json, os, time, uuid
 import streamlit as st
-from core import stream_answer
+from core import stream_answer, model, model_label
 
-FEEDBACK = "data/feedback.jsonl"
+FEEDBACK_DIR = "data/feedback" 
 
-FAQ = """
-**Which model answers my questions?**
-Claude Opus 5 by Anthropic.
+ISSUES = ["Mathematically wrong", "Doesn't answer my question", "Wrong or missing citation",
+          "Says the notes don't cover it, but they do", "Hard to understand",
+          "Too long", "Too short / missing steps", "Math or formatting broken"]
+IMPROVE = ["Explain step by step", "Add a worked example", "Give the intuition first",
+           "Use the lecture's notation", "Be shorter", "Include the proof"]
 
-**Which courses are supported?**
+FAQ = f"""
+:blue[**What is this?**]
+A project that collects students' feedback on answers written by a large language
+model (LLM). You ask questions about the *Linear Algebra* lecture, an LLM answers
+from the lecture notes (citing them as [sec.X]), and you tell us whether the answer
+helped and, if not, what was wrong and how it should be better. At this stage the
+goal is to collect that feedback: it shows where LLM answers fail students and how
+they should be improved, and it will be used to train a lecture assistant that can
+be deployed for students.
+
+:blue[**Which model answers my questions?**]
+{model_label}.
+
+:blue[**Which courses are supported?**]
 Currently only *Linear Algebra*. If you have the LaTeX source (`.tex`) of your
 course's lecture notes, email it to [s64lwu@uni-bonn.de] and we will add support for your course.
 
-**Why can't I ask my next question?**
+:blue[**Why can't I ask my next question?**]
 You need to rate the previous answer with 👍 or 👎 first. **Please always rate —
-this is the most important signal we have for improving the answers.** The comment
-box is optional, but very welcome when something is wrong or missing.
+this is the most important signal we have for improving the answers.** After a 👎,
+also tick at least one thing that was wrong. How it should be improved and the
+comment box are optional, but very welcome.
 
-**Where do the answers come from?**
+:blue[**Where do the answers come from?**]
 Only from the lecture notes. For each question the assistant looks up the most
 relevant sections and answers from those. If it says the notes don't cover
 something, try rephrasing with the terms used in the lecture.
 
-**Can the answers be wrong?**
+:blue[**Can the answers be wrong?**]
 Yes. Always check important points against the lecture notes, and don't rely on it
 for graded work.
 
-**Which language should I use?**
+:blue[**Which language should I use?**]
 English. The notes are in English and the search matches English terms best.
 
-**Does it remember the conversation?**
+:blue[**Does it remember the conversation?**]
 It remembers the last few questions in this tab, so follow-up questions work.
 Refreshing the page starts a new conversation.
 
-**What data is stored?**
-Your questions, the answers, your ratings and comments are saved to improve the
-assistant. No name or login is recorded, but please don't enter personal information.
-Questions are processed by Anthropic's API.
+:blue[**What data is stored?**]
+Your questions, the answers, your ratings, the problems you ticked and your comments are saved and
+used to train the lecture assistant. No name or login is recorded, but please don't enter personal information.
+Questions are processed by OpenAI's API.
 """
 
 st.title("Linear Algebra TA")
@@ -49,20 +65,33 @@ if "history" not in st.session_state:
 
 def save_feedback(i):
     h = st.session_state.history
+    bad = st.session_state.get(f"rate_{i}") == 0
     record = {
         "time": time.strftime("%Y-%m-%d %H:%M:%S"),
         "id": f"{st.session_state.sid}-{i}",
+        "model": h[i].get("model"),
         "question": h[i - 1]["content"],
         "answer": h[i]["content"],
         "pages": h[i].get("pages", []),
+        "request": h[i].get("request"),
         "rating": {0: "bad", 1: "good"}.get(st.session_state.get(f"rate_{i}")),
+        "issues": (st.session_state.get(f"issues_{i}") or []) if bad else [],
+        "improve": (st.session_state.get(f"improve_{i}") or []) if bad else [],
         "comment": st.session_state.get(f"comment_{i}", ""),
     }
-    with open(FEEDBACK, "a", encoding="utf-8") as f:
-        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    os.makedirs(FEEDBACK_DIR, exist_ok=True)
+    path = os.path.join(FEEDBACK_DIR, record["id"] + ".json")
+    with open(path + ".tmp", "w", encoding="utf-8") as f:
+        json.dump(record, f, ensure_ascii=False, indent=1)
+    os.replace(path + ".tmp", path) 
 
 def feedback_widgets(i):
     st.feedback("thumbs", key=f"rate_{i}", on_change=save_feedback, args=(i,))
+    if st.session_state.get(f"rate_{i}") == 0:
+        st.pills("What was wrong?", ISSUES, selection_mode="multi", key=f"issues_{i}",
+                 on_change=save_feedback, args=(i,))
+        st.pills("How should it be improved?", IMPROVE, selection_mode="multi", key=f"improve_{i}",
+                 on_change=save_feedback, args=(i,))
     st.text_input("comment", key=f"comment_{i}", placeholder="Comment (Optional)",
                   label_visibility="collapsed", on_change=save_feedback, args=(i,))
 
@@ -74,11 +103,15 @@ for i, m in enumerate(st.session_state.history):
 
 last = len(st.session_state.history) - 1
 need_rating = last >= 0 and st.session_state.get(f"rate_{last}") is None
+need_reason = (last >= 0 and st.session_state.get(f"rate_{last}") == 0
+               and not st.session_state.get(f"issues_{last}"))
 
 if need_rating:
     st.caption("Please rate the last answer (👍 / 👎) before asking the next question.")
+elif need_reason:
+    st.caption("Please select what was wrong with the last answer before asking the next question.")
 
-if question := st.chat_input("Ask about the lecture...", disabled=need_rating):
+if question := st.chat_input("Ask about the lecture...", disabled=need_rating or need_reason):
     with st.chat_message("user"):
         st.markdown(question)
 
@@ -88,6 +121,7 @@ if question := st.chat_input("Ask about the lecture...", disabled=need_rating):
 
     st.session_state.history += [
         {"role": "user", "content": question},
-        {"role": "assistant", "content": answer, "pages": out.get("pages", [])},
+        {"role": "assistant", "content": answer, "pages": out.get("pages", []), "model": model,
+         "request": out.get("request")},
     ]
     st.rerun()

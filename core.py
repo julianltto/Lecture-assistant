@@ -1,8 +1,9 @@
-import anthropic
+import openai
 from rag import retrieve
 
-model = "claude-opus-5"
-client = anthropic.Anthropic()
+model = "gpt-6-luna"
+model_label = "GPT-6 Luna by OpenAI"
+client = openai.OpenAI()
 RULES = ("You are the TA of this lecture. Answer only from the notes below. "
          "Cite pages as [sec.X]. If the notes don't cover it, say so. "
          "Write math as $...$ or $$...$$. "
@@ -18,17 +19,22 @@ def build_system_prompt(query):
 
 def stream_answer(history, question, out):
     messages = (history + [{"role": "user", "content": question}])[-2 * MAX_TURNS + 1:]
-    messages = [{"role": m["role"], "content": m["content"]} for m in messages]  # API 只收这两个字段
+    messages = [{"role": m["role"], "content": m["content"]} for m in messages] 
     questions = [m["content"] for m in messages if m["role"] == "user"]
     system, hits = build_system_prompt(" ".join(questions[-3:]))
     out["pages"] = [p["page"] for p in hits]
 
-    with client.messages.stream(
+    request = dict(
         model=model,
-        max_tokens=1000,
-        system=system,
-        messages=messages,
-    ) as stream:
-        for text in stream.text_stream:
-            yield text
-        out["message"] = stream.get_final_message()
+        instructions=system,
+        input=messages,
+        reasoning={"effort": "low"},
+        max_output_tokens=4000,  
+    )
+    out["request"] = request  
+    stream = client.responses.create(**request, stream=True)
+    for event in stream:
+        if event.type == "response.output_text.delta":
+            yield event.delta
+        elif event.type == "response.completed":
+            out["message"] = event.response
