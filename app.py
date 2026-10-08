@@ -12,13 +12,14 @@ IMPROVE = ["Explain step by step", "Add a worked example", "Give the intuition f
 
 FAQ = f"""
 :blue[**What is this?**]
-A project that collects students' feedback on answers written by a large language
-model (LLM). You ask questions about the *Linear Algebra* lecture, an LLM answers
-from the lecture notes (citing them as [sec.X]), and you tell us whether the answer
-helped and, if not, what was wrong and how it should be better. At this stage the
-goal is to collect that feedback: it shows where LLM answers fail students and how
-they should be improved, and it will be used to train a lecture assistant that can
-be deployed for students.
+A project to build a lecture assistant for students. You ask questions about the
+*Linear Algebra* lecture, a large language model (LLM) answers from the lecture notes
+(citing them as [sec.X]), and you tell us whether the answer helped and, if not, what
+was wrong and how it should be better. At this stage we collect that feedback and use
+it to train a lecture assistant that is small enough to run on a laptop and that will
+be made available to all students of the University of Bonn. We will also experiment
+with different ways for students to contribute to this project. **Your feedback is
+very welcome!**
 
 :blue[**Which model answers my questions?**]
 {model_label}.
@@ -43,16 +44,23 @@ Yes. Always check important points against the lecture notes, and don't rely on 
 for graded work.
 
 :blue[**Which language should I use?**]
-English. The notes are in English and the search matches English terms best.
+German. Language using needs to match the language of the lecture note.
 
 :blue[**Does it remember the conversation?**]
 It remembers the last few questions in this tab, so follow-up questions work.
 Refreshing the page starts a new conversation.
 
 :blue[**What data is stored?**]
-Your questions, the answers, your ratings, the problems you ticked and your comments are saved and
-used to train the lecture assistant. No name or login is recorded, but please don't enter personal information.
-Questions are processed by OpenAI's API.
+For each answer we save:
+- your question and the earlier questions of this conversation,
+- the answer and the lecture sections it was based on,
+- your rating, the problems and improvements you ticked, and your comment,
+- the time of your rating and a random session ID.
+
+This data is used to train the lecture assistant. No name or login is recorded, so
+please don't enter personal information. Your IP address is used to deliver the
+website but is not stored: the server keeps no access logs. Questions are processed
+by OpenAI's API.
 """
 
 st.title("Linear Algebra TA")
