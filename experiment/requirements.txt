@@ -1,4 +1,5 @@
 trl[vllm]==0.24.0
+transformers>=4.56.1,<5
 peft
 deepspeed
 datasets
