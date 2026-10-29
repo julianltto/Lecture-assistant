@@ -1,0 +1,8 @@
+trl[vllm]==0.24.0
+peft
+deepspeed
+datasets
+accelerate
+math-verify
+openai
+tensorboard
