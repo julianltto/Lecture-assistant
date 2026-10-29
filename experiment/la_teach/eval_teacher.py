@@ -68,12 +68,10 @@ def cmd_solve(args):
             by_sec[r["sec"]].append(r["explanation"])
         conditions[tag] = by_sec
 
-    llm = LLM(model=args.student, tensor_parallel_size=args.tp, max_model_len=16384,
+    llm = LLM(model=args.student, tensor_parallel_size=args.tp, max_model_len=args.max_model_len,
               gpu_memory_utilization=0.9, enable_prefix_caching=True, seed=args.seed)
     tok = llm.get_tokenizer()
 
-    budget = args.max_model_len - args.max_tokens
-    truncated = defaultdict(int)
     prompts, owner = [], []
     for cname, cond in conditions.items():
         for qi, p in enumerate(test):
@@ -138,6 +136,7 @@ def main():
     s.add_argument("--student_thinking", action="store_true")
     s.add_argument("--n_none", type=int, default=4)
     s.add_argument("--max_tokens", type=int, default=2048)
+    s.add_argument("--max_model_len", type=int, default=16384)
     s.add_argument("--tp", type=int, default=1)
     s.add_argument("--seed", type=int, default=1234)
 
