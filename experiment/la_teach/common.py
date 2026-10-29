@@ -171,6 +171,24 @@ def render(tokenizer, messages, enable_thinking=False):
         return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
 
+def count_tokens(tokenizer, messages, enable_thinking=False):
+    return len(tokenizer(render(tokenizer, messages, enable_thinking), add_special_tokens=False).input_ids)
+
+
+def fit_student_messages(tokenizer, problem, ctx, label, budget, enable_thinking=False):
+    messages = student_messages(problem, ctx, label)
+    over = count_tokens(tokenizer, messages, enable_thinking) - budget
+    if over <= 0:
+        return messages, False
+    if not ctx:
+        raise ValueError(f"problem {problem.get('id')} alone exceeds the student prompt budget {budget}")
+    ids = tokenizer(ctx, add_special_tokens=False).input_ids
+    keep = len(ids) - over - 16
+    if keep <= 0:
+        raise ValueError(f"no room for context on problem {problem.get('id')}")
+    return student_messages(problem, tokenizer.decode(ids[:keep]), label), True
+
+
 def strip_think(text):
     if "</think>" in text:
         text = text.split("</think>", 1)[1]

@@ -6,3 +6,4 @@ accelerate
 math-verify
 openai
 tensorboard
+wandb

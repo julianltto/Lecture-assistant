@@ -72,6 +72,8 @@ def cmd_solve(args):
               gpu_memory_utilization=0.9, enable_prefix_caching=True, seed=args.seed)
     tok = llm.get_tokenizer()
 
+    budget = args.max_model_len - args.max_tokens
+    truncated = defaultdict(int)
     prompts, owner = [], []
     for cname, cond in conditions.items():
         for qi, p in enumerate(test):

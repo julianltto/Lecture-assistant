@@ -32,11 +32,12 @@ def build_rows(sections, train, tok, rows_per_section, n_examples, n_eval, max_w
 
 
 class StudentReward:
-    def __init__(self, client, problems_by_id, log_path):
+    def __init__(self, client, problems_by_id, log_path, max_fail_frac=0.2):
         self.__name__ = "student_acc"
         self.client = client
         self.problems = problems_by_id
         self.log_path = log_path
+        self.max_fail_frac = max_fail_frac
         self.calls = 0
 
     def __call__(self, prompts, completions, eval_ids, sec, **kwargs):
@@ -46,7 +47,11 @@ class StudentReward:
             for pid in ids:
                 jobs.append((self.problems[pid], expl, "Lernhilfe"))
                 owner.append(i)
+        self.client.reset_stats()
         accs = self.client.accuracy(jobs)
+        stats = dict(self.client.stats)
+        if stats["failed"] > self.max_fail_frac * max(1, stats["requests"]):
+            raise RuntimeError(f"student server failing: {stats}")
         totals = [0.0] * len(explanations)
         counts = [0] * len(explanations)
         for i, a in zip(owner, accs):
@@ -64,6 +69,7 @@ class StudentReward:
                     "best_reward": rewards[best],
                     "best_explanation": explanations[best],
                     "words": [len(e.split()) for e in explanations],
+                    "student": stats,
                 }, ensure_ascii=False) + "\n")
         return rewards
 
@@ -79,6 +85,8 @@ def main():
     ap.add_argument("--student_n", type=int, default=1)
     ap.add_argument("--student_max_tokens", type=int, default=2048)
     ap.add_argument("--student_thinking", action="store_true")
+    ap.add_argument("--student_max_model_len", type=int, default=12288)
+    ap.add_argument("--teacher_max_model_len", type=int, default=12288)
     ap.add_argument("--vllm_host", default="127.0.0.1")
     ap.add_argument("--vllm_port", type=int, default=8000)
     ap.add_argument("--rows_per_section", type=int, default=24)
@@ -97,6 +105,7 @@ def main():
     ap.add_argument("--temperature", type=float, default=1.0)
     ap.add_argument("--save_steps", type=int, default=25)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--report_to", default="wandb,tensorboard")
     args = ap.parse_args()
 
     from datasets import Dataset
@@ -110,13 +119,29 @@ def main():
     rows = build_rows(sections, train, tok, args.rows_per_section, args.n_examples, args.n_eval, args.max_words, args.seed)
     max_prompt = max(len(tok(r["prompt"], add_special_tokens=False).input_ids) for r in rows)
     print(f"{len(rows)} prompts, longest prompt {max_prompt} tokens", flush=True)
+    if max_prompt + args.max_completion_length > args.teacher_max_model_len:
+        raise SystemExit(f"teacher budget exceeded: prompt {max_prompt} + completion {args.max_completion_length} "
+                         f"> teacher_max_model_len {args.teacher_max_model_len}")
+
+    student_tok = AutoTokenizer.from_pretrained(args.student)
+    train_by_len = sorted(train, key=lambda p: len(p["frage"]) + sum(len(o) for o in p.get("optionen", [])))
+    filler = student_tok.decode([student_tok.encode(" Wort", add_special_tokens=False)[0]] * args.max_completion_length)
+    probe = StudentClient(args.student_url, args.student, max_tokens=args.student_max_tokens,
+                          thinking=args.student_thinking, max_context=args.student_max_model_len, tokenizer=student_tok)
+    worst = max(probe.prompt_tokens(probe.fit(p, filler, "Lernhilfe")) for p in train_by_len[-20:])
+    print(f"student worst case: prompt {worst} + answer {args.student_max_tokens} "
+          f"<= {args.student_max_model_len}, ctx truncations {probe.stats['ctx_truncated']}", flush=True)
+    if probe.stats["ctx_truncated"]:
+        raise SystemExit("a full-length explanation does not fit the student context; raise student_max_model_len "
+                         "or lower max_completion_length / student_max_tokens")
 
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     (out / "run_args.json").write_text(json.dumps(vars(args), indent=1), encoding="utf-8")
 
     client = StudentClient(args.student_url, args.student, n=args.student_n,
-                           max_tokens=args.student_max_tokens, thinking=args.student_thinking)
+                           max_tokens=args.student_max_tokens, thinking=args.student_thinking,
+                           max_context=args.student_max_model_len, tokenizer=student_tok)
     reward = StudentReward(client, {p["id"]: p for p in train}, str(out / "samples.jsonl"))
 
     config = GRPOConfig(
@@ -141,8 +166,10 @@ def main():
         logging_steps=1,
         save_steps=args.save_steps,
         save_only_model=True,
-        report_to="tensorboard",
-        log_completions=False,
+        report_to=args.report_to.split(","),
+        run_name=out.name,
+        log_completions=True,
+        num_completions_to_print=0,
         seed=args.seed,
         model_init_kwargs={"torch_dtype": "bfloat16", "attn_implementation": "sdpa"},
     )
